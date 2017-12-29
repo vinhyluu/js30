@@ -47,6 +47,8 @@
     </div>
   </div>
 
+  <!-- hooking up the data to key 65 along with audio. when someone hits the key, it'll play it, find the div and animate itself on it  -->
+
   <audio data-key="65" src="sounds/clap.wav"></audio>
   <audio data-key="83" src="sounds/hihat.wav"></audio>
   <audio data-key="68" src="sounds/kick.wav"></audio>
@@ -58,7 +60,13 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  //listen for the keydown event 
+  //e is a object full of data of what happened 
+  //looking in the console you can see there's a value called "keyCode" so we'll console e.keyCode to get the number value of what was pressed instead of all the data back
+  window.addEventListener('keydown', function(e){
+    console.log(e.keyCode);
 
+  });
 </script>
 
 
