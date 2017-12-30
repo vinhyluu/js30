@@ -63,10 +63,38 @@
   //listen for the keydown event 
   //e is a object full of data of what happened 
   //looking in the console you can see there's a value called "keyCode" so we'll console e.keyCode to get the number value of what was pressed instead of all the data back
-  window.addEventListener('keydown', function(e){
-    console.log(e.keyCode);
 
-  });
+  //is there an audio element that has a data-key of 65 (doc.querySelector) -- select an audio element where it has a data-key-- use an attribute selector [data-key]=${e.keyCode}
+  //we are now getting the corresponding audio element associated with the key
+
+  function playSound(e){
+    // console.log(e.keyCode);
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`)
+
+    //we want to add the animation to the keypress
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"`);
+    console.log(key); //gives us the corresponding key elements that we have 
+
+
+    // console.log(audio);
+    if(!audio) return; //if there's no corresponding key with a src value, will stop running altogether
+    
+    audio.currentTime = 0;//rewinds to the start 
+    audio.play(); //now that we have the audio element we can just play it
+    //the problem we have is that the sound plays only once every so often. if you call .play on an audio element that's already playing it won't play again. before this, we rewind it to the start so you can play in succession 
+    key.classList.add('playing'); //continuation of const key = document.querySelector('.key...) -- similiar to jQuery's addClass
+    //we need a transition end effect when the transition finishes
+  }
+  function removeTransition(e){
+    // console.log(e); //we now have a bunch of transitionends in our console-- box shadow, border color, transform, etc.
+    if(e.propertyName !== 'transform') return; //skip it if it's not a transform
+    // console.log(e.propertyName);//it's console logging the word transform because that's the property that's being ended 
+    this.classList.remove('playing');//this refers to what's called against the eventListener below so that would refer to the key
+  }
+
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition)); //each key gets added an event listener which is transitionend and then remove it
+  window.addEventListener('keydown', playSound);
 </script>
 
 
