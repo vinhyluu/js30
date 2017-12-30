@@ -21,6 +21,24 @@
   <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
 
   <style>
+    /* 1) CSS VARIABLEAS-- you declare on some sort of element-- root is the highest level you can get to -- setting our default values here
+    -- declaring on root is like declaring on html */
+    :root{
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img{
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    h1{
+      color: var(--base);
+    }
+
 
     /*
       misc styles, nothing to do with CSS variables
@@ -45,6 +63,26 @@
   </style>
 
   <script>
+    // 2) select all of our inputs
+    const inputs = document.querySelectorAll('.controls input');
+
+    // 3) create function handeUpdate
+    function handleUpdate(){
+      // console.log(this.value);
+      //5) dataset is an object that contains all the data attributes from a specific element-- essentially it's everything that has 'data' in front of it
+      //.sizing is a data attribute we defined in the HTML
+      const suffix = this.dataset.sizing || '';//for some of them they don't have a sizing value like the color one-- if you don't it'll append undefined
+      console.log(suffix);
+
+      //7) select our entire document in root and set property of base, spacing or blur -- we set those values also in our labels
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix); //selecting the input name and tacking on value. that will only give us the number value. we created the suffix variable so that it would also include the px value as well
+    }
+
+  // 3.5) listen for change event on each input by looping over each one. listen for the change event and when that is called we're going to call handleUpdate
+    inputs.forEach(input => input.addEventListener('change', handleUpdate));
+    //4) when you drag it doesn't trigger change, so we can add mousemove. when you move the slider it'll trigger a change rather just when you let go 
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
+    
   </script>
 
 </body>
