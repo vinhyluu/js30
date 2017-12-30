@@ -68,12 +68,12 @@
   //we are now getting the corresponding audio element associated with the key
 
   function playSound(e){
-    // console.log(e.keyCode);
+    // console.log(e.keyCode); //grabbing the keycode and then playing the audio later using audio.play();
     const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`)
 
     //we want to add the animation to the keypress
     const key = document.querySelector(`.key[data-key="${e.keyCode}"`);
-    console.log(key); //gives us the corresponding key elements that we have 
+    // console.log(key); //gives us the corresponding key elements that we have 
 
 
     // console.log(audio);
