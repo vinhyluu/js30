@@ -24,6 +24,7 @@
     .panels {
       min-height:100vh;
       overflow: hidden;
+      display: flex;
     }
 
     .panel {
@@ -41,6 +42,12 @@
       font-size: 20px;
       background-size:cover;
       background-position:center;
+      /* flex 1 evenly distributes each one */
+      flex: 1; 
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
     }
 
 
@@ -50,11 +57,24 @@
     .panel4 { background-image:url(https://source.unsplash.com/ITjiVXcwVng/1500x1500); }
     .panel5 { background-image:url(https://source.unsplash.com/3MNzGlQM7qs/1500x1500); }
 
+/* Flex Items */
     .panel > * {
       margin:0;
       width: 100%;
       transition:transform 0.5s;
+      /* border: 1px solid red; */
+      flex: 1 0 auto;
+      display: flex; 
+      justify-content: center;
+      align-items: center;
     }
+
+    /* select .panel and all of it's children '*'. We're targeting the first child and the last child. this will move the top and bottom text off the page */
+    .panel > *:first-child { transform: translateY(-100%); }
+    /* when the panel has a class of open-active we'll translateY to 0 */
+    .panel.open-active > *:first-child { transform: translateY(0); }
+    .panel > *:last-child { transform: translateY(100%); }
+    .panel.open-active > *:last-child { transform: translateY(0); }
 
     .panel p {
       text-transform: uppercase;
@@ -66,8 +86,10 @@
       font-size: 4em;
     }
 
+    /* when the panel has a class of open we want to give it a flex of 5. by giving it a flex of 5, when it has a class of open it'll take 5 times the amount of room as the rest of them  */
     .panel.open {
       font-size:40px;
+      flex: 5;
     }
 
   </style>
@@ -102,6 +124,40 @@
   </div>
 
   <script>
+    //1) first we grab all the panels
+    //make sure it's querySelectorAll and write a function that will toggle on or open
+
+    const panels = document.querySelectorAll('.panel');
+
+    function toggleOpen(){
+      this.classList.toggle('open'); //this is adding the class of .open to .panel. going back up to the css it's flex grow by 5 and font size increases 
+    }
+
+    //4) normally you would do something similar to the above; however, there will be multiple transitionend events being fired
+    // first we pass in e
+    function toggleActive(e){
+      //5) when you click on the panel, it'll trigger the transition and when it finishes, it shows you what is being transitioned. the font size AND flex grow so 2 things are tranistioned. in our CSS, when the panel is open we're transitioning both of those when class of open is added .panel.open
+      console.log(e.propertyName); //e.propertyName gives you the property name associated with the transition
+
+      //6) really we only care about the flex-grow
+      //if it includes the word 'flex' and if that's true, toggle open active
+
+      //SUMMARY: listening for a click on each panel, when smoeone clicks it'll triggler CSS open and then when that finishes, transitionend will fire and thats when we'll toggle openactive 
+      if(e.propertyName.includes('flex')){
+        this.classList.toggle('open-active');
+      }
+    }
+
+
+
+    //2) on each of the panels we're going to listen for a click
+    //we're going to take each of the panels, loop over each one, listen for a click on each one and run the toggle function when it's run
+    //why doesn't it toggle open if you make toggleOpen a function like toggleOpen()? that would run on page load. we dont' want to run the function only want it to happen when smoeone clicks it 
+    
+    panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+    //3) when the panels expand we also want the top and bottom text to animate in. we're going to use a transitionend to do this. we're also going to toggle class of open active with a function called toggleActive.
+    //side note for myself, when you add an eventlistener you have to declare a function similarly to React above it where 'this' refers to the event listener's subject
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
 
   </script>
 
