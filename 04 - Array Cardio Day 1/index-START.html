@@ -154,9 +154,31 @@
       });
         console.log(alpha);
 
+        //side note if you did want to return an array, that's where reduce would come in 
+
     // 8. Reduce Exercise
     // Sum up the instances of each of these
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
+
+    // 'item' equates to car, car, truck etc.
+    const transportation = data.reduce(function(obj, item){
+      if(!obj[item]){
+        obj[item] = 0;
+      }
+      obj[item]++;
+      return obj;
+    }, {});
+
+    console.log(transportation);
+
+
+      // console.log(item);
+      // return obj;
+    //we need to start with blank objects which is the starting point and loop over each one
+    // if there is no object item then object item is equal to 0-- that will set the initial one to 0 
+    // we start with a blank object -- we first see if there's a 0 to work with and if not we need to make an entry for that and then increment it
+
+    
 
     
 
