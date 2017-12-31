@@ -123,21 +123,42 @@
 
     //1) have to get the DOM elements on the page
     // get out our dev tools and inspect what contains it 'mw-category' which is the div
-    const category = document.querySelector('.mw-category');
+    // const category = document.querySelector('.mw-category');
+
     //2) then we find the links within it
-    const links = category.querySelectorAll('a'); //gives us all links
+    // const links = [...category.querySelectorAll('a')]; //gives us all links
     //need to convert the links to a list of names and then filter the ones that only include the actual names
-    const de = links.map(link => link.textContent); 
 
-
-
+    // const de = links
+    //             .map(link => link.textContent)
+    //             .filter(streetName => streetName.includes('de')); 
+    //only return if streetname includes 'de'
+    
+    //textContent will give the content rather than the actual link
+    //there's a problem with the above though because links.map is not a function--  a query selector will return you a node list and you don't see map but see for each. have to change const links to an array-- we could do spread to spread every single item into an array
 
     // 7. sort Exercise
     // Sort the people alphabetically by last name
+    const alpha = people.sort(function(lastOne, nextOne){
+        console.log(lastOne); 
+        //this is the last and first name of each person in the array
+        //what we want is to convert to first and last name
+        const [aLast, aFirst] = lastOne.split(', '); 
+        //what they're all separated by is a comma and a space
+        const [bLast, bFirst] = nextOne.split(', ');
+        //since we're ordering by doing comparisons, we have to make another variable 
+        console.log(aLast, aFirst);
+        //now we get an array of first thing is the last name, second thing is the last name
+        //rather than returning an array we can put those into their own variables. we change const parts to ... const [last, first] -- we are destructuring 
+        return aLast > bLast ? 1 : -1;
+      });
+        console.log(alpha);
 
     // 8. Reduce Exercise
     // Sum up the instances of each of these
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
+
+    
 
   </script>
 </body>
