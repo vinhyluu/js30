@@ -36,7 +36,7 @@ const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb
     .then(blob => blob.json())
     .then(data => cities.push(...data))
 
-  //3) how do we get each and every item to go into our cities array? if we just do cities.push(data) we only have 1 item in our array and then within that is the array so it's nested which isn't what we want. how do we get each item to go into cities. if you do something like cities.push(1, 2, 3), it'll put it as its own item in the array
+  //3) how do we get each and every item to go into our cities array? if we just do cities.push(data) we only have 1 item in our array and then within that is the array so it's nested which isn't what we want. how do we get each item to go into cities? if you do something like cities.push(1, 2, 3), it'll put it as its own item in the array and become [1000, 1, 2. 3]
   //we spread INTO this push method that will give us proper cities 
 
   //4) the next thing is when someone types into the box, we need to run a function that will take the massive array and filter it down into a subset 

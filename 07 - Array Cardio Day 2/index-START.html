@@ -26,15 +26,69 @@
 
     // Some and Every Checks
     // Array.prototype.some() // is at least one person 19 or older?
+
+    //.some will check if one thing your array meets what you're looking for 
+      //some will take a function that will check every single person we have 
+      const isAdult = people.some(function (person) {
+        const currentYear = (new Date()).getFullYear(); //that gets us the current year
+
+        //this will return us the value of true
+        if (currentYear - person.year >= 19) {
+          return true;
+        }
+      });
+
+      //if we put isAdult into {} it'll return us the name of the value 'isAdult' along with 'true'
+      console.log({ isAdult });
+
     // Array.prototype.every() // is everyone 19 or older?
 
+    const allAdults = people.every(function (person) {
+        const currentYear = (new Date()).getFullYear();
+        if (currentYear - person.year >= 19) {
+          return true;
+        }
+      });
+
+      //this will return false because not every single item in our array will meet our criteria
+      console.log({ allAdults });
+
     // Array.prototype.find()
-    // Find is like filter, but instead returns just the one you are looking for
+    // Find is like filter, but instead of returning a subset of an array it'll return you the FIRST item it finds
     // find the comment with the ID of 823423
+    const comment = comments.find(function(comment){
+      if(comment.id === 823423){
+        return true;
+      }
+    })
+    console.log(comment);
+
+    //written as an arrow function
+    //because it will return either true or false we don't need an if statement in there
+    // const comment = comments.find(comment => comment.id === 823423);
+
+    // console.log(comment);
 
     // Array.prototype.findIndex()
     // Find the comment with this ID
     // delete the comment with the ID of 823423
+
+    //find where something is inside of our array
+    //in order to delete something you have to find where it is in the array
+    const index = comments.findIndex(comment =>       comment.id === 823423);
+    //it'll tell us it's the second item in our array
+    console.log(index);
+
+    //how do we delete it?
+    //can do:
+    comments.splice(index, 1);
+
+    //or creade a new array:
+    const newComments = [
+      ...comments.slice(0, index),
+      ...comments.slice(index + 1)
+    ];
+
 
   </script>
 </body>
