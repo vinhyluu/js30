@@ -15,7 +15,100 @@
     </ul>
   </form>
 <script>
+  //wes found this JSON file online that includes state, city and population and put that into a URL
+  // first thing we need to do is fetch the data/huge array
+  //whenever someone types into the box, we'll filter by either the state or city name that matches what you typed 
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+  //1) first we need to have an empty array to put our cities into and then fetch data 
+
+  const cities = [];
+
+  //2) fetch will return a promise. means that something will eventually come back from the fetch. need to call .then which will return us a "blob" of data
+  //we get back Response. the data that comes back from fetch it doesn't know what kind of data it is yet. could be an image, html, music that's coming back, etc.
+  //the blob has to be converted from the raw data into JSON
+  //fetch(endpoint).then(blob => console.log(blob));
+
+  //inside of blob there's a method called json in there so we can update our then to the following: 
+
+  //blob.json() returns another promise so we need 1 more .then statement to get to the raw data. we get a massive array 
+  fetch(endpoint)
+    .then(blob => blob.json())
+    .then(data => cities.push(...data))
+
+  //3) how do we get each and every item to go into our cities array? if we just do cities.push(data) we only have 1 item in our array and then within that is the array so it's nested which isn't what we want. how do we get each item to go into cities. if you do something like cities.push(1, 2, 3), it'll put it as its own item in the array
+  //we spread INTO this push method that will give us proper cities 
+
+  //4) the next thing is when someone types into the box, we need to run a function that will take the massive array and filter it down into a subset 
+
+  //creating this function that will take in a word to match and take in the cities array-- we want to pass in the data that will be filtered
+  function findMatches(wordToMatch, cities){
+    //we'll return the cities array but call filter on it so that it chisels it down into a subset-- each one will have a place and from that we need to figure out if the city or state matches what was searched 
+    return cities.filter(place => {
+      //we need a couple of regular expressions/regexes
+      //pass in wordToMatch which will be whatever the person passes in like 'new', 'bos', etc.
+      //pass in 'g' which is global meaning it'll look through the entire string and 'i' is insensitive--it will match lower and uppercase 
+      const regex = new RegExp(wordToMatch, 'gi');
+      //now we call .match with our regex and that'll take place.city
+      //each place is each item in our array and we go deeper into the data with .city which is matched to whatever the user searches.regex. we also need to match with the state as well
+      
+      //now if we run findMatches('Bos', cities); 
+      // it returns a smaller array of 2 things, boston and bossier city
+      return place.city.match(regex) || place.state.match(regex)
+    });
+  }
+
+  //14) last step is to have numbers with commas 
+  //copy and pasted from wes' code
+  //then add numberWithCommas to our population html below
+  function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+  //5) now we need to create our display function
+  //this will be called whenever someone changes the value 
+  function displayMatches(){
+    // console.log(this.value);
+    //7) passing in
+    const matchArray = findMatches(this.value, cities); //this.value being the value of what's typed into searchInput and our cities array
+    //whenever you type into it, it'll run displayMatches and call the function and find ones that match your search string
+    
+    //8) next we'll loop over it
+    //each one will be the place and from each of those, return .. backticks which will hold our list item
+    //inside that want a span with a class of name etc.
+    const html = matchArray.map(place => {
+      //11) we want to format the numbers and highlight the actual words. go back to our map function and before we return, create a regex that will match the city name and replace the word it matches with a span with a class of hl
+      //this.value being whatever the person searched for
+      //want to search for it globally 'g' -- if it's matched more than once in the city name would be cool to show that and 'i' insensitively we don't care about lower case or uppercase
+      const regex = new RegExp(this.value, 'gi'); 
+      //12) we will create a cityName variable. take place.city and replace the Regex which is whatever it matches with a span with a class of highlight and then the value the person had searched for
+      //now we can take that cityName and replace place.city within our return span class
+      const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+
+      //13) we also have to do this for the states as well
+      const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+
+      return `
+        <li>
+          <span class="name">${cityName}, ${stateName}</span>
+          <span class="population">${numberWithCommas(place.population)}</span>
+        </li>
+      `;
+    }).join(''); //10) this map will return an array when we just want a string. we call a .join on the end and that will return it from an array with multiple items to 1 big string 
+    //9) once we've mapped over the array, we can call suggestions (that's our query selector at the bottom)
+    suggestions.innerHTML = html; //html variable we just created
+  }
+
+
+  const searchInput = document.querySelector('.search');
+  const suggestions = document.querySelector('.suggestions');
+
+  //6) listen for the change event and when the input changes we're going to run displayMatches
+  //if you type in the search and click outside, it will then trigger and console log this which is the input and the value of what they typed in there
+  //why do you need to click outside? it fires when you go off that input. if you want it to fire on key up add a key up event 
+  //now when we type it'll tell you what the person typed into the box
+  searchInput.addEventListener('change', displayMatches);
+  searchInput.addEventListener('keyup', displayMatches);
 
 </script>
   </body>
