@@ -7,6 +7,64 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+  const canvas = document.querySelector("#draw");
+  //1) canvas you get a block of actual pixels and you draw on the context which can be 2D but can also use it for 3d renders
+  const ctx = canvas.getContext('2d');
+  //2) next we size it to be the width of the window
+  //now when you inspect element it'll be the whole page 
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
+  ctx.strokeStyle = "#BADA55"; //3) stroke needs to be a colour
+  ctx.lineJoin = "round"; //the end of the line should it be squared off
+  ctx.lineCap = "round"; //when the lines join should they be square or rounded 
+  //10) make linewidth bigger
+  ctx.lineWidth = 100;
+
+  //4) dummy variables. when you click down on the element and move your mouse and let go, nothing happens when you move your mouse. only draws when the cursor is down. creating a flag where you set it to false, and when you click down it's set to true and when you let go of it it'll be false
+  let isDrawing = false;
+  //5) when we draw to the canvas, what needs to happen when you draw a line is you need a starting x and y. what we've done is we've created a last x and y variable for where you start the line and where you've finished and ended
+  let lastX = 0; 
+  let lastY = 0;
+
+  //6) function draw will take in an event. it will be called whenever the mouse is moved over the canvas
+  //now when we move our mouse on the canvas the mouse events are logged-- we're going to see all the information about where it was fired
+  
+  function draw(e){
+    if(!isDrawing) return; //if not drawing it will stop the function from running when they are not moused down
+    console.log(e);
+    //8) now we want to start our path. we need to start with an x and y, move it to x and y and that'll complete our drawing
+    ctx.beginPath();
+    //8.3) we're always starting from 0
+    ctx.moveTo(lastX, lastY);
+    //^ 8.4) going to whereever the users mouse is moving
+    ctx.lineTo(e.offsetX, e.offsetY); // 8.1)these values are coming from the actual event that happens
+    ctx.stroke(); 
+    //8.2)all of these lines are starting up our line until we call stroke
+    //8.5) when we're done the draw function we want to update the last x and the last y variables to be whereever they were
+    lastX = e.offsetX;
+    lastY = e.offsetY;
+    //8.6) is that we always start at 0, 0 and that we can only draw one continuous line and nothing in between. go back to our mousedown function
+    
+  }
+  //9) rather than just doing this one quick inline function like the others, make it into a block so we can do multiple things
+  canvas.addEventListener("mousedown", (e) => {
+    isDrawing = true;
+    //have to update last X and Y the same as we did above and pass the event. as soon as the person clicks the mouse down to start it, before we do a mousemove the mousedown will happen before we move our mouse and it'll update our lastX and Y and it'll put us where we want to go rather than 0, 0
+    lastX = e.offsetX;
+    lastY = e.offsetY;
+  });
+
+
+  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("mouseup", () => isDrawing = false);
+  //what can happen is you can click down and leave the window and come back it'll still think that's mousedown
+  canvas.addEventListener("mouseout", () => isDrawing = false);
+  //7) ^^ now with all of these events set, we want to console.log only when the mouse is down
+
+  
+
+
 </script>
 
 <style>
