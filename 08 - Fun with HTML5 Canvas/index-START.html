@@ -20,12 +20,20 @@
   ctx.lineCap = "round"; //when the lines join should they be square or rounded 
   //10) make linewidth bigger
   ctx.lineWidth = 100;
+  //16) we can use blend modes from photoshop
+  //when you draw on it they will blend each other as you draw on top of it 
+  ctx.globalCompositeOperation = "multiply";
 
   //4) dummy variables. when you click down on the element and move your mouse and let go, nothing happens when you move your mouse. only draws when the cursor is down. creating a flag where you set it to false, and when you click down it's set to true and when you let go of it it'll be false
   let isDrawing = false;
   //5) when we draw to the canvas, what needs to happen when you draw a line is you need a starting x and y. what we've done is we've created a last x and y variable for where you start the line and where you've finished and ended
   let lastX = 0; 
   let lastY = 0;
+  //11) 
+  let hue = 0;
+
+  //14) we can make the lines go from small to thick-- that means it will be building up
+  let direction = true;
 
   //6) function draw will take in an event. it will be called whenever the mouse is moved over the canvas
   //now when we move our mouse on the canvas the mouse events are logged-- we're going to see all the information about where it was fired
@@ -33,6 +41,9 @@
   function draw(e){
     if(!isDrawing) return; //if not drawing it will stop the function from running when they are not moused down
     console.log(e);
+    //12) as we draw and before we begin our path, instead of starting with BADA55 we're setting it at: 
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+
     //8) now we want to start our path. we need to start with an x and y, move it to x and y and that'll complete our drawing
     ctx.beginPath();
     //8.3) we're always starting from 0
@@ -45,7 +56,26 @@
     lastX = e.offsetX;
     lastY = e.offsetY;
     //8.6) is that we always start at 0, 0 and that we can only draw one continuous line and nothing in between. go back to our mousedown function
-    
+
+    //13) that will just increment it. the second time will be 1, third time 2, etc. 
+    hue++;
+    if(hue >= 360){ //resetting it back to the first colour 
+      hue = 0;
+    }
+    //15) for every loop we are going to increment the line width
+
+    //breakdown of this:
+    //if it's greater than 100 flip the direction or if it's less than 1 flip the direction
+     
+    if(ctx.lineWidth >= 100 || ctx.lineWidth <= 1){
+      direction =!direction;
+    }
+    //depending on the direction, we either increment the linewidth, or if the direction is going the other way we decrement it by 1 
+    if(direction){
+    ctx.lineWidth++;
+    }else{
+      ctx.lineWidth--;
+    }
   }
   //9) rather than just doing this one quick inline function like the others, make it into a block so we can do multiple things
   canvas.addEventListener("mousedown", (e) => {
